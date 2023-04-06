@@ -4,3 +4,7 @@ package-lock.json
 .genesis/
 
 Group/
+
+*.vcxproj
+*.vcxproj.user
+*.sln

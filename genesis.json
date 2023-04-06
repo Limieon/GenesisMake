@@ -1,0 +1,31 @@
+{
+    "name": "GenesisEngine",
+    "projects": {
+        "Group": {
+            "Project": {
+                "type": "StaticLib",
+                "includeDirs": [
+                    "%{wks.location}/Group/src/Project/"
+                ],
+                "dependencies": []
+            }
+        }
+    },
+    "modules": {
+        "spdlog": {
+            "type": "premake",
+            "includeDirs": [
+                "include/"
+            ],
+            "packet": {
+                "type": "git-clone",
+                "repo": "https://github.com/gabime/spdlog"
+            },
+            "library": {
+                "type": "premake",
+                "script": "%{wks.location}/.genesis/spdlog.lua"
+            },
+            "dependencies": []
+        }
+    }
+}

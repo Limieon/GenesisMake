@@ -1,0 +1,33 @@
+{
+  "name": "genesismake",
+  "version": "1.0.0",
+  "description": "A buildsystem on the base of premake",
+  "main": "genesis.js",
+  "type": "module",
+  "scripts": {
+    "genesis": "npx ts-node-esm genesis.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GMasterHD/GenesisMake.git"
+  },
+  "author": "DragonsrRoar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GMasterHD/GenesisMake/issues"
+  },
+  "homepage": "https://github.com/GMasterHD/GenesisMake#readme",
+  "dependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/commander": "^2.12.2",
+    "@types/figlet": "^1.5.5",
+    "@types/gradient-string": "^1.1.2",
+    "@types/inquirer": "^9.0.3",
+    "chalk": "^5.2.0",
+    "commander": "^10.0.0",
+    "figlet": "^1.5.2",
+    "gradient-string": "^2.0.2",
+    "inquirer": "^9.1.5",
+    "ts-node": "^10.9.1"
+  }
+}

@@ -6,6 +6,7 @@ import Chalk from 'chalk'
 import { Command } from 'commander'
 import Inquirer from 'inquirer'
 import Gradient from 'gradient-string'
+import ChildProcess from 'child_process'
 
 type GenesisProject = {
 	type: string
@@ -68,10 +69,22 @@ class Utils {
 		})
 	}
 
-	static async measureTime(fn: () => void) {
+	static async measureTime(fn: () => Promise<boolean>) {
 		const start = Date.now()
-		await fn()
-		console.log(Chalk.green('Done!'), Chalk.gray('took', `${((Date.now() - start) / 1000)}s`))
+		if (await fn()) {
+			console.log(Chalk.green('Done!'), Chalk.gray('took', `${((Date.now() - start) / 1000)}s`))
+		} else {
+			console.log(Chalk.red('Failed!'), Chalk.gray('took', `${((Date.now() - start) / 1000)}s`))
+		}
+	}
+
+	static async runCommand(command: string): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			const cmd = ChildProcess.exec(command)
+			cmd.stdout.pipe(process.stdout)
+			cmd.stderr.pipe(process.stderr)
+			cmd.on('exit', resolve)
+		})
 	}
 }
 
@@ -222,6 +235,23 @@ class Handlers {
 		console.log(Chalk.gray('Module added'), `${Chalk.green('successfully')}${Chalk.gray('!')}`)
 	}
 	static async handleInstall() {
+		if (!Genesis.exists()) {
+			console.log(Chalk.red('Directory does not seem to be a GenesisMake project!'))
+			return false
+		}
+
+		const modules = Genesis.load().modules
+		for (let module of Object.keys(modules)) {
+			const packet = modules[module].packet
+			switch (packet.type) {
+				case 'git-clone': {
+					let p = packet as GenesisGitPacket
+					await Utils.runCommand(`git clone ${p.repo} ./.genesis/modules/${module}`)
+				}
+			}
+		}
+
+		return true
 	}
 
 	static async handleGitClonePacket() {
@@ -239,7 +269,7 @@ class Handlers {
 	static async handleClean() {
 		if (!Genesis.exists()) {
 			console.log(Chalk.red('Directory does not seem to be a GenesisMake project!'))
-			return
+			return false
 		}
 
 		const dirs = [
@@ -263,6 +293,8 @@ class Handlers {
 				'.sln'
 			])
 		})
+
+		return true
 	}
 }
 
@@ -285,7 +317,7 @@ app.command('module')
 app.command('install')
 	.alias('i')
 	.description('installs currently defined packets')
-	.action(Handlers.handleInstall)
+	.action(() => { Utils.measureTime(Handlers.handleInstall) })
 
 app.command('clean')
 	.description('cleans project data')

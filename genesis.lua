@@ -60,7 +60,7 @@ end
 local moduleRoot = "%{wks.location}/.genesis/modules/"
 
 local function checkIfProjectModule(data)
-	return data.type ~= nil
+	return data.type ~= nil or data.library ~= nil
 end
 
 local genesisFile = json.decode(readFile("genesis.json"))
@@ -208,7 +208,7 @@ end
 
 local function handleModule(name, data)
 	local function handlePremakeModule(name, data)
-		local scriptName = data.script
+		local scriptName = data.library.script
 		if (scriptName == nil) then
 			print("WARN: Could not find script property on module " .. name .. "!")
 			print("Setting script location to " .. moduleRoot .. "../scripts/" .. name)
@@ -217,10 +217,29 @@ local function handleModule(name, data)
 		end
 	end
 
-	if data.type == "premake" then
+	print(dump(data.type))
+
+	if data.library.type == "premake" then
 		handlePremakeModule(name, data)
+	else
+		assert(true, "Cannot find library of type " .. data.library.type .. "!")
 	end
 end
+
+function dump(o)
+	if type(o) == 'table' then
+		local s = '{ '
+		for k, v in pairs(o) do
+			if type(k) ~= 'number' then k = '"' .. k .. '"' end
+			s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
+		end
+		return s .. '} '
+	else
+		return tostring(o)
+	end
+end
+
+print(dump(plainModules))
 
 for key, val in pairs(plainModules) do
 	handleModule(key, val)

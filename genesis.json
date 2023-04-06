@@ -13,7 +13,6 @@
     },
     "modules": {
         "spdlog": {
-            "type": "premake",
             "includeDirs": [
                 "include/"
             ],

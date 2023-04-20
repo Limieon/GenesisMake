@@ -5,7 +5,14 @@
             "Project": {
                 "type": "StaticLib",
                 "includeDirs": [
-                    "%{wks.location}/Group/src/Project/"
+                    "%{wks.location}/Group/src/GroupProject/"
+                ],
+                "dependencies": []
+            },
+            "Test": {
+                "type": "ConsoleApp",
+                "includeDirs": [
+                    "%{wks.location}/Group/src/Test/"
                 ],
                 "dependencies": []
             }

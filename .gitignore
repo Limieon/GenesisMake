@@ -2,9 +2,13 @@ node_modules/
 _genesis.json
 package-lock.json
 .genesis/
+.vscode/
 
 Group/
 
 *.vcxproj
 *.vcxproj.user
 *.sln
+
+bin/
+bin-int/

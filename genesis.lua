@@ -24,7 +24,7 @@
 
 local json = require "json"
 
-local function defineProject(name, group, type, includeDirs, dependencies)
+local function defineProject(name, group, type, includeDirs, dependencies, script)
 	project(group .. "-" .. name)
 	location("%{wks.location}/" .. group .. "/src/" .. group .. name .. "/")
 	kind(type)
@@ -47,6 +47,11 @@ local function defineProject(name, group, type, includeDirs, dependencies)
 
 	if (type ~= "StaticLib") then
 		links(dependencies)
+	end
+
+	include("./.genesis/project/__global__.lua")
+	if (script ~= nil) then
+		include(script)
 	end
 end
 
@@ -203,7 +208,7 @@ local function handleProject(name, data)
 	end
 
 	local split = string.split(name, "-")
-	defineProject(split[2], split[1], data.type, includeDirs, deps)
+	defineProject(split[2], split[1], data.type, includeDirs, deps, "./.genesis/project/" .. name .. ".lua")
 end
 
 local function handleModule(name, data)
@@ -216,8 +221,6 @@ local function handleModule(name, data)
 			scriptName = moduleRoot .. "../scripts/" .. name
 		end
 	end
-
-	print(dump(data.type))
 
 	if data.library.type == "premake" then
 		handlePremakeModule(name, data)
@@ -238,8 +241,6 @@ function dump(o)
 		return tostring(o)
 	end
 end
-
-print(dump(plainModules))
 
 for key, val in pairs(plainModules) do
 	handleModule(key, val)

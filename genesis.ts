@@ -454,7 +454,6 @@ class Handlers {
 	}
 
 	static async handleGenerate(data) {
-		console.log(data)
 		if (data.generator == undefined || generators[(data.generator as string).toLowerCase()] == undefined) {
 			console.log(Chalk.red('No generator specified!'))
 			console.log(Chalk.gray('The following generators are available:'))

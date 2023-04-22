@@ -164,14 +164,15 @@ class GeneratorVSCodeMSB extends Generator {
 		const tasks = []
 
 		const { projects, modules } = Utils.flat(Genesis.load())
+		const { arch, config } = opt
+		const archName = ARCHITECTURES[arch].msb
+
 		Object.keys(projects).forEach(prj => {
 			const project = projects[prj]
 			if (project.type != 'ConsoleApp') return
 			if (project.hide != undefined && project.hide) return
 
 			const name = project.alias == undefined ? prj : project.alias
-			const { arch, config } = opt
-			const archName = ARCHITECTURES[arch].msb
 
 			configurations.push({
 				name: `${name}-${config}`,
@@ -200,6 +201,18 @@ class GeneratorVSCodeMSB extends Generator {
 				problemMatcher: '$msCompile',
 				dependsOn: 'premake-vs2022'
 			})
+		})
+
+		tasks.push({
+			label: 'premake-vs2022',
+			type: 'shell',
+			command: 'npm',
+			args: [
+				'run',
+				'genesis',
+				'generate',
+				'premake'
+			]
 		})
 
 		if (!FS.existsSync('./.vscode')) FS.mkdirSync('./.vscode/')

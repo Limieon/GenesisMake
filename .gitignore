@@ -3,6 +3,9 @@ _genesis.json
 package-lock.json
 .genesis/
 .vscode/
+genesis.js
+dist/
+test/
 
 Group/
 

@@ -10,6 +10,7 @@ import ChildProcess from 'child_process'
 
 type GenesisProject = {
 	type: string
+	alias?: string
 	includeDirs?: string[]
 	dependencies?: string[]
 	hide?: boolean
@@ -168,7 +169,7 @@ class GeneratorVSCodeMSB extends Generator {
 			if (project.type != 'ConsoleApp') return
 			if (project.hide != undefined && project.hide) return
 
-			const name = prj
+			const name = project.alias == undefined ? prj : project.alias
 			const { arch, config } = opt
 			const archName = ARCHITECTURES[arch].msb
 

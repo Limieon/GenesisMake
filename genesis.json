@@ -10,6 +10,7 @@
                 "dependencies": []
             },
             "Test": {
+                "alias": "Test",
                 "type": "ConsoleApp",
                 "includeDirs": [
                     "%{wks.location}/Group/src/Test/"
